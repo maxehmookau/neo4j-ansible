@@ -1,0 +1,44 @@
+---
+- name: Change Soft Open File Limit
+  lineinfile: dest=/etc/security/limits.conf
+              insertbefore="^# End of file$"
+              line="root   soft    nofile  40000"
+              state=present
+
+- name: Change Hard Open File Limit
+  lineinfile: dest=/etc/security/limits.conf
+              insertbefore="^# End of file$"
+              line="root   hard    nofile  40000"
+              state=present
+
+- name: Change Hard Open File Limit
+  lineinfile: dest=/etc/pam.d/su
+              insertafter="^# session    required   pam_limits.so$"
+              line="session    required   pam_limits.so"
+              state=present
+
+- name: Create directory structure
+  file: state=directory
+        path=/opt/neo4j
+
+- name: Download neo4j
+  get_url: url=http://dist.neo4j.org/neo4j-community-2.0.0-unix.tar.gz
+           dest=/opt/neo4j/neo4j-community-2.0.0-unix.tar.gz
+
+- name: Unzip
+  command: tar xvzf neo4j-community-2.0.0-unix.tar.gz chdir=/opt/neo4j
+
+- name: Allow access from ALL hosts
+  lineinfile: dest=/opt/neo4j/neo4j-community-2.0.0/conf/neo4j-server.properties
+              insertafter="^#org.neo4j.server.webserver.address=0.0.0.0$"
+              line=org.neo4j.server.webserver.address=0.0.0.0
+              state=present
+
+- name: Set port listening
+  lineinfile: dest=/opt/neo4j/neo4j-community-2.0.0/conf/neo4j-server.properties
+              regexp="^org.neo4j.server.webserver.port=7474$"
+              line=org.neo4j.server.webserver.port=80
+              state=present
+
+- name: Start
+  command: sudo bin/neo4j restart chdir=/opt/neo4j/neo4j-community-2.0.0

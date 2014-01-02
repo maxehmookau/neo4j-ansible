@@ -1,0 +1,23 @@
+---
+- name: 'Update Apt'
+  apt: update_cache=yes
+
+- name: Install Dependencies
+  apt: pkg={{ item }}
+       state=present
+  with_items:
+    - python-software-properties
+    - python-apt
+    - python-pycurl
+
+- name: Add JDK 7 ppa
+  apt_repository: repo='ppa:webupd8team/java' state=present
+
+- name: 'Update Apt'
+  apt: update_cache=yes
+
+- name: Accept Licence Agreements
+  shell: sudo echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+
+- name: 'Install Java 7'
+  apt: pkg=oracle-java7-installer state=present
