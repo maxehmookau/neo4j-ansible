@@ -22,23 +22,26 @@
         path=/opt/neo4j
 
 - name: Download neo4j
-  get_url: url=http://dist.neo4j.org/neo4j-community-2.0.0-unix.tar.gz
-           dest=/opt/neo4j/neo4j-community-2.0.0-unix.tar.gz
+  get_url: url=http://dist.neo4j.org/neo4j-community-{{ neo4j_version }}-unix.tar.gz
+           dest=/opt/neo4j/neo4j-community-{{ neo4j_version }}-unix.tar.gz
 
 - name: Unzip
-  command: tar xvzf neo4j-community-2.0.0-unix.tar.gz chdir=/opt/neo4j
+  command: tar xvzf neo4j-community-{{ neo4j_version }}-unix.tar.gz chdir=/opt/neo4j
+
+- name: Remove tar file
+  command: rm -rf /opt/neo4j/neo4j-community-{{ neo4j_version }}-unix.tar.gz
 
 - name: Allow access from ALL hosts
-  lineinfile: dest=/opt/neo4j/neo4j-community-2.0.0/conf/neo4j-server.properties
+  lineinfile: dest=/opt/neo4j/neo4j-community-{{ neo4j_version }}/conf/neo4j-server.properties
               insertafter="^#org.neo4j.server.webserver.address=0.0.0.0$"
               line=org.neo4j.server.webserver.address=0.0.0.0
               state=present
 
 - name: Set port listening
-  lineinfile: dest=/opt/neo4j/neo4j-community-2.0.0/conf/neo4j-server.properties
+  lineinfile: dest=/opt/neo4j/neo4j-community-{{ neo4j_version }}/conf/neo4j-server.properties
               regexp="^org.neo4j.server.webserver.port=7474$"
               line=org.neo4j.server.webserver.port=80
               state=present
 
 - name: Start
-  command: sudo bin/neo4j restart chdir=/opt/neo4j/neo4j-community-2.0.0
+  command: sudo bin/neo4j restart chdir=/opt/neo4j/neo4j-community-{{ neo4j_version }}
