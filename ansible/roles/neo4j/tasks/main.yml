@@ -31,17 +31,19 @@
 - name: Remove tar file
   command: rm -rf /opt/neo4j/neo4j-community-{{ neo4j_version }}-unix.tar.gz
 
-- name: Allow access from ALL hosts
-  lineinfile: dest=/opt/neo4j/neo4j-community-{{ neo4j_version }}/conf/neo4j-server.properties
-              insertafter="^#org.neo4j.server.webserver.address=0.0.0.0$"
-              line=org.neo4j.server.webserver.address=0.0.0.0
-              state=present
+- name: Download authentication-extension plugin
+  get_url: url=http://dist.neo4j.org/authentication-extension/authentication-extension-2.0.0-1.0-SNAPSHOT.jar
+           dest=/opt/neo4j/neo4j-community-{{ neo4j_version }}/plugins/authentication-extension-2.0.0-1.0-SNAPSHOT.jar
+           owner=root
+           group=root
+           mode=0644
 
-- name: Set port listening
-  lineinfile: dest=/opt/neo4j/neo4j-community-{{ neo4j_version }}/conf/neo4j-server.properties
-              regexp="^org.neo4j.server.webserver.port=7474$"
-              line=org.neo4j.server.webserver.port=80
-              state=present
+- name: Copy Config
+  copy: src=../files/neo4j-server.properties
+        dest=/opt/neo4j/neo4j-community-{{ neo4j_version }}/conf/neo4j-server.properties
+        owner=root
+        group=root
+        mode=0644
 
 - name: Copy Upstart Job
   copy: src=../files/neo4j.conf dest=/etc/init/neo4j.conf owner=root group=root mode=0644
