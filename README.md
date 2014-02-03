@@ -24,6 +24,10 @@ This playbook installs [authentication-extension](https://github.com/neo4j-contr
 
 This playbook uses `upstart` to restart neo4j automatically whenever the server is restarted.
 
+## Testing
+
+Please test any changes to the playbook using serverspec. To run the tests, run `bundle install` and `bundle exec rake spec`. Check out the `spec/` folder for examples.
+
 ## Licence
 
 The Ansible playbooks are licenced under MIT as described in `LICENCE.md`. neo4j is licenced under GPLv3 as described in [its README](https://github.com/neo4j/neo4j#licensing).
