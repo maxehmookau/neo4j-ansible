@@ -31,3 +31,7 @@ Please test any changes to the playbook using serverspec. To run the tests, run 
 ## Licence
 
 The Ansible playbooks are licenced under MIT as described in `LICENCE.md`. neo4j is licenced under GPLv3 as described in [its README](https://github.com/neo4j/neo4j#licensing).
+
+## Contributors
+
+[Sam Knight](https://github.com/samknight)
